@@ -15,6 +15,14 @@ while(True):
     # Capture the video frame by frame
     ret, frame = vid.read()
 
+    # if (time % 10 == 0):
+    #     grab frame
+    #     do predict
+    #     update predict
+    #     show frame
+    # else:
+    #     show old predict, show current frame
+
     # Display the resulting frame
     cv2.imshow('frame', frame)
 
