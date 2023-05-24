@@ -31,6 +31,7 @@ try:
             # print(filename)
             # filename = os.path.abspath(item)
             new_file = "{}.png".format(filename)
+            output_file_name = output_dir + new_file
             with Image.open(item) as im:
                 print(new_file)
                 # im.save(output_dir, new_file)
