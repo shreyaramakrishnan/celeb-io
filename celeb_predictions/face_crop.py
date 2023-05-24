@@ -6,6 +6,7 @@ from PIL import Image
 from pathlib import Path
 
 IM_EXTENSION = ".jpg"
+OUTPUT_SIZE = 224
 
 # 224x224x3
 def dir_face_crop(input_dir, output_dir, scale):
@@ -35,7 +36,8 @@ def dir_face_crop(input_dir, output_dir, scale):
                     for (x, y, w, h) in faces_rect:
                         face_cropped = img[y:y+h, x:x+w]
                         # THIS IS A GOOD LINE
-                        face_resized_img = cv2.resize(img[y:y+h, x:x+w], (175,175), interpolation = cv2.INTER_AREA)
+                        face_resized_img = cv2.resize(img[y:y+h, x:x+w], (OUTPUT_SIZE, OUTPUT_SIZE), interpolation = cv2.INTER_AREA)
+                        # print(face_resized_img.shape)
                         
                         #save cropped face images
                         # new_img_name = img_name.replace('.jpg', '')
