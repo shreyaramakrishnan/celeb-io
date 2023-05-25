@@ -34,6 +34,8 @@ def frame_face_crop(frame, scale=1.3):
 
 # 224x224x3
 def dir_face_crop(input_dir, output_dir, scale=1.7):
+#  TODO: if there are more than 1 faces in the photo, discard photo
+
 
     for dir in Path(input_dir).iterdir():
         # print(dir)

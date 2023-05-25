@@ -1,4 +1,5 @@
-import keras 
+from tensorflow import keras
+# import keras 
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Dropout
 import os
@@ -8,6 +9,7 @@ import face_crop as fc
 import sklearn.preprocessing as sk
 import sklearn.svm as svm
 from sklearn.metrics import accuracy_score
+from sklearn.decomposition import PCA
 
 num_classes = 196
 
@@ -92,13 +94,13 @@ functional_model = keras.models.Model(inputs=model.layers[0].input, outputs=mode
 
 # preprocess the data by calling face_crop.py 
 INPUT_DIR = './celeb_predictions/data/basic_input_spoof/'
-OUTPUT_DIR = './celeb_predictions/data/img_data/'
-fc.dir_face_crop(INPUT_DIR, OUTPUT_DIR)
+OUTPUT_DIR = './celeb_predictions/data/img_output/'
+# fc.dir_face_crop(INPUT_DIR, OUTPUT_DIR)
 
 # generate embeddings for each image in our dataset based on the pre-trained weights 
 PATH = OUTPUT_DIR
 images = os.listdir(PATH)
-print(images)
+# print(images)
 
 img_embeddings = []
 targets = []
@@ -138,7 +140,7 @@ x_train_std = scaler.fit_transform(x_train)
 x_test_std = scaler.transform(x_test)
 
 # reduce the dimensionality of the feature encodings using PCA
-pca = sk.PCA(n_components=128)
+pca = PCA(n_components=128)
 x_train_pca = pca.fit_transform(x_train_std)
 x_test_pca = pca.transform(x_test_std)
 
