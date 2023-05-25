@@ -1,5 +1,6 @@
 # this is the face preprocessing file
 import cv2
+import glob
 import sys
 import os
 from PIL import Image
