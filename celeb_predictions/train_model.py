@@ -5,7 +5,9 @@ import os
 import cv2
 import numpy as np
 import face_crop as fc
-import sklearn as sk
+import sklearn.preprocessing as sk
+import sklearn.svm as svm
+from sklearn.metrics import accuracy_score
 
 num_classes = 196
 
@@ -88,15 +90,20 @@ model.load_weights('vgg16_weights.h5' , by_name = True, skip_mismatch = True)
 # look at "descriptor.png" to see the model architecture
 functional_model = keras.models.Model(inputs=model.layers[0].input, outputs=model.layers[-2].output)
 
+# preprocess the data by calling face_crop.py 
+INPUT_DIR = './celeb_predictions/data/basic_input_spoof/'
+OUTPUT_DIR = './celeb_predictions/data/img_data/'
+fc.dir_face_crop(INPUT_DIR, OUTPUT_DIR)
+
 # generate embeddings for each image in our dataset based on the pre-trained weights 
-PATH = './celeb_predictions/trial_images/'
+PATH = OUTPUT_DIR
 images = os.listdir(PATH)
 print(images)
 
 img_embeddings = []
 targets = []
 for image in images:
-    img =load_img(PATH + image)
+    img = load_img(PATH + image)
     targets.append(fc.get_label(PATH + image))
     embedding = functional_model.predict(np.expand_dims(img, axis=0))[0]
     img_embeddings.append(embedding)
@@ -120,12 +127,33 @@ for i in range(len(img_embeddings)):
 print(y_train, y_test)
 
 # encode the labels using label encoder 
-le = sk.preprocessing.LabelEncoder()
+le = sk.LabelEncoder()
 train_labels = le.fit_transform(y_train)
 test_labels = le.transform(y_test)
 print(train_labels, test_labels)
 
-# train the model using the embeddings
+# standardize the feature encodings 
+scaler = sk.StandardScaler()
+x_train_std = scaler.fit_transform(x_train)
+x_test_std = scaler.transform(x_test)
+
+# reduce the dimensionality of the feature encodings using PCA
+pca = sk.PCA(n_components=128)
+x_train_pca = pca.fit_transform(x_train_std)
+x_test_pca = pca.transform(x_test_std)
+
+# create and train an SVM classifier 
+clf = svm.SVC(kernel='rbf', C=10, gamma=0.001)
+clf.fit(x_train_pca, train_labels)
+
+encoded_predictions = clf.predict(x_test_pca)
+decoded_predictions = le.inverse_transform(encoded_predictions)
+print("Predictions: ", decoded_predictions)
+
+accuracy = accuracy_score(test_labels, encoded_predictions)
+print("Accuracy: ", accuracy)
+
+
 
 
 
