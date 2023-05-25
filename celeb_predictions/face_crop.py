@@ -8,6 +8,17 @@ from pathlib import Path
 IM_EXTENSION = ".jpg"
 OUTPUT_SIZE = 224
 
+# returns label, None if this isn't a valid format
+def get_label(file):
+    try:
+      return os.path.basename(file)[:file.index("_")]
+    except Exception as e:
+      print(e)
+      # no underscore
+      print("NO LABEL, this isn't a file")
+      return None
+    
+
 # 224x224x3
 def dir_face_crop(input_dir, output_dir, scale):
     
@@ -80,7 +91,10 @@ def face_crop(path, scale):
             cv2.imwrite(new_img_name + '.jpg', face_resized_img)
 
 try:
-  dir_face_crop("/homes/iws/ljkniest/celeb-io/celeb_predictions/data/basic_input_spoof", "/homes/iws/ljkniest/celeb-io/celeb_predictions/data/basic_output_spoof", 1.5)
+  # dir_face_crop("/homes/iws/ljkniest/celeb-io/celeb_predictions/data/basic_input_spoof", "/homes/iws/ljkniest/celeb-io/celeb_predictions/data/basic_output_spoof", 1.5)
+  for file in os.listdir("/homes/iws/ljkniest/celeb-io/celeb_predictions/data/basic_output_spoof"):
+      print(get_label(file))
+      # get_label(file)
 except Exception as e:
   print("EXCEPTION")
   print(e)
