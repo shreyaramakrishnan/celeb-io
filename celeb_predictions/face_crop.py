@@ -75,7 +75,7 @@ def face_crop(path, scale):
     # haar_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_alt.xml')
 
     # Loading the required haar-cascade xml classifier file
-    haar_cascade = cv2.CascadeClassifier('Haarcascade_frontalface_default.xml')
+    # haar_cascade = cv2.CascadeClassifier('Haarcascade_frontalface_default.xml')
     
     for img_name in img_list:
         img = cv2.imread(img_name)
