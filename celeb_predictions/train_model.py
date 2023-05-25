@@ -1,19 +1,16 @@
-# create and train CNN
-
-import tensorflow as tf
 import keras 
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Dropout
-from keras.preprocessing.image import ImageDataGenerator
-from keras.optimizers import Adam
 import os
 import cv2
 import numpy as np
+import face_crop as fc
+import sklearn as sk
 
 num_classes = 196
 
 '''
-convolutional layers - good use for detecting features in images, outputs a feature map 
+convolutional - good use for detecting features in images, outputs a feature map 
 max pooling - reduces the dimensionality of each feature map but keeps the most important information (max in this case)
 flatten - flattens the input (after being run through previous layers) to one dimension, important transition layer to input 
           into the fully connected layers
@@ -77,14 +74,12 @@ def load_img(path):
     # resize image to 224x224
     img = cv2.resize(img, (224,224))
     # preprocess image for vgg model
-    # print(img.shape)
     img = img.reshape((img.shape[0], img.shape[1], img.shape[2]))
     img = keras.applications.vgg16.preprocess_input(img)
     # convert from BGR to RGB
     return img[...,::-1]
 
 model = vgg_face()
-# print(model.summary())
 
 # load in the pre-trained weights using the vgg model up to the last layer (fc2)
 model.load_weights('vgg16_weights.h5' , by_name = True, skip_mismatch = True) 
@@ -99,11 +94,41 @@ images = os.listdir(PATH)
 print(images)
 
 img_embeddings = []
+targets = []
 for image in images:
     img =load_img(PATH + image)
-    # print(img.size)
+    targets.append(fc.get_label(PATH + image))
     embedding = functional_model.predict(np.expand_dims(img, axis=0))[0]
     img_embeddings.append(embedding)
+
+# plot the embeddings
+
+# create train and test datasets using the embeddings we generated 
+x_train = []
+y_train = []
+x_test = []
+y_test = []
+
+# following the 80/20 rule for train/test split
+for i in range(len(img_embeddings)):
+    if i % 5 == 0: 
+        x_test.append(img_embeddings[i])
+        y_test.append(targets[i])
+    else: 
+        x_train.append(img_embeddings[i])
+        y_train.append(targets[i])
+print(y_train, y_test)
+
+# encode the labels using label encoder 
+le = sk.preprocessing.LabelEncoder()
+train_labels = le.fit_transform(y_train)
+test_labels = le.transform(y_test)
+print(train_labels, test_labels)
+
+# train the model using the embeddings
+
+
+
 
 
 
