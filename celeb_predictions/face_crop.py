@@ -9,7 +9,8 @@ from pathlib import Path
 IM_EXTENSION = ".jpg"
 OUTPUT_SIZE = 224
 
-haar_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
+# Loading the required haar-cascade xml classifier file
+haar_cascade = cv2.CascadeClassifier('./celeb_predictions/haarcascade_frontalface_default.xml')
 
 # returns label, None if this isn't a valid format
 def get_label(file):
@@ -33,9 +34,6 @@ def frame_face_crop(frame, scale=1.3):
 
 # 224x224x3
 def dir_face_crop(input_dir, output_dir, scale=1.7):
-    
-    # Loading the required haar-cascade xml classifier file
-    haar_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
 
     for dir in Path(input_dir).iterdir():
         # print(dir)
@@ -58,22 +56,10 @@ def dir_face_crop(input_dir, output_dir, scale=1.7):
                     # resize each face detected in images
                     for (x, y, w, h) in faces_rect:
                         face_cropped = img[y:y+h, x:x+w]
-                        # THIS IS A GOOD LINE
                         face_resized_img = cv2.resize(img[y:y+h, x:x+w], (OUTPUT_SIZE, OUTPUT_SIZE), interpolation = cv2.INTER_AREA)
-                        # print(face_resized_img.shape)
-                        
-                        #save cropped face images
-                        # new_img_name = img_name.replace('.jpg', '')
 
-                        # this is the good line
-                        # print(output_file_name)
                         cv2.imwrite(output_file_name, face_resized_img)
 
-
-                    # with Image.open(item) as im:
-                    #   print(new_file)
-                    #   # im.save(output_dir, new_file)
-                    #   im.save(new_file)
             os.chdir("..")
     
 
@@ -103,10 +89,12 @@ def face_crop(path, scale):
             cv2.imwrite(new_img_name + '.jpg', face_resized_img)
 
 
+# input = "C:/Users/liann/Documents/UW/celeb-io/celeb_predictions/data/basic_input_spoof"
+# output = "C:/Users/liann/Documents/UW/celeb-io/celeb_predictions/data/img_output"
 
 # try:
-#   # dir_face_crop("/homes/iws/ljkniest/celeb-io/celeb_predictions/data/basic_input_spoof", "/homes/iws/ljkniest/celeb-io/celeb_predictions/data/basic_output_spoof", 1.5)
-#   for file in os.listdir("/homes/iws/ljkniest/celeb-io/celeb_predictions/data/basic_output_spoof"):
+#   dir_face_crop(input, output, 1.5)
+#   for file in os.listdir(output):
 #       print(get_label(file))
 #       # get_label(file)
 # except Exception as e:
