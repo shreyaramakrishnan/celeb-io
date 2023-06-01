@@ -1,11 +1,12 @@
 # celeb-io
-CSE 455 final project 
-
-Created By: Audrey Craig, Lianne Kniest and Shreya Ramakrishnan
+## CSE 455 final project -
+### Created By: Audrey Craig, Lianne Kniest and Shreya Ramakrishnan
 
 Project Video Summary Link:
 
 1-2 paragraphs about project:
+
+
 
       What problem are you trying to solve?
 
