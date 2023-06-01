@@ -82,6 +82,8 @@ def face_crop(path, scale):
     for img_name in img_list:
         img = cv2.imread(img_name)
         faces_rect = haar_cascade.detectMultiScale(img, scaleFactor=scale, minNeighbors=5)
+        if faces_rect.length() > 1:
+           continue
         
         # resize each face detected in images
         for (x, y, w, h) in faces_rect:
