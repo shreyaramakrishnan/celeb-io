@@ -15,7 +15,9 @@ haar_cascade = cv2.CascadeClassifier('./celeb_predictions/haarcascade_frontalfac
 # returns label, None if this isn't a valid format
 def get_label(file):
     try:
-      return os.path.basename(file)[:file.index("_")]
+      img_name = os.path.basename(file)
+      names = img_name.split("_")
+      return names[0]
     except Exception as e:
       print(e)
       # no underscore

@@ -1,5 +1,4 @@
-from tensorflow import keras
-# import keras 
+import keras 
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Dropout
 import os
@@ -10,6 +9,9 @@ import sklearn.preprocessing as sk
 import sklearn.svm as svm
 from sklearn.metrics import accuracy_score
 from sklearn.decomposition import PCA
+
+# TODO: figure out how to get the embeddings so that this can be used as a pretrained model
+# TODO: test on celebrity images 
 
 num_classes = 196
 
@@ -95,7 +97,7 @@ functional_model = keras.models.Model(inputs=model.layers[0].input, outputs=mode
 # preprocess the data by calling face_crop.py 
 INPUT_DIR = './celeb_predictions/data/basic_input_spoof/'
 OUTPUT_DIR = './celeb_predictions/data/img_output/'
-# fc.dir_face_crop(INPUT_DIR, OUTPUT_DIR)
+#fc.dir_face_crop(INPUT_DIR, OUTPUT_DIR)
 
 # generate embeddings for each image in our dataset based on the pre-trained weights 
 PATH = OUTPUT_DIR
@@ -126,12 +128,14 @@ for i in range(len(img_embeddings)):
     else: 
         x_train.append(img_embeddings[i])
         y_train.append(targets[i])
+print("printing y_train & y_test")
 print(y_train, y_test)
 
 # encode the labels using label encoder 
 le = sk.LabelEncoder()
 train_labels = le.fit_transform(y_train)
 test_labels = le.transform(y_test)
+print("printing training & testing ")
 print(train_labels, test_labels)
 
 # standardize the feature encodings 
