@@ -1,4 +1,5 @@
-import keras 
+# import keras 
+from tensorflow import keras
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Dropout
 import os
@@ -100,7 +101,7 @@ functional_model.save('functional_model')
 
 # preprocess the data by calling face_crop.py 
 INPUT_DIR = './celeb_predictions/data/basic_input_spoof/'
-OUTPUT_DIR = './celeb_predictions/data/img_output/'
+OUTPUT_DIR = './celeb_predictions/data/basic_output_spoof/'
 #fc.dir_face_crop(INPUT_DIR, OUTPUT_DIR)
 
 # generate embeddings for each image in our dataset based on the pre-trained weights 

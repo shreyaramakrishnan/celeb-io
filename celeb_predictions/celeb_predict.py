@@ -35,6 +35,7 @@ while(True):
     # check to see if we need to update our prediction
     if (frame_count > FRAME_DELAY):
        # do prediction
+      predict_input = frame
       print("update")
       # picture = get_picture(prediction) # get closest neighbor photo
       # label = fc.get_label(prediction) # get label
