@@ -9,6 +9,8 @@ import sklearn.preprocessing as sk
 import sklearn.svm as svm
 from sklearn.metrics import accuracy_score
 from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+import pickle
 
 # TODO: figure out how to get the embeddings so that this can be used as a pretrained model
 # TODO: test on celebrity images 
@@ -94,6 +96,8 @@ model.load_weights('vgg16_weights.h5' , by_name = True, skip_mismatch = True)
 # look at "descriptor.png" to see the model architecture
 functional_model = keras.models.Model(inputs=model.layers[0].input, outputs=model.layers[-2].output)
 
+functional_model.save('functional_model')
+
 # preprocess the data by calling face_crop.py 
 INPUT_DIR = './celeb_predictions/data/basic_input_spoof/'
 OUTPUT_DIR = './celeb_predictions/data/img_output/'
@@ -119,14 +123,18 @@ x_train = []
 y_train = []
 x_test = []
 y_test = []
+x_test_images = []
+x_train_images = []
 
 # following the 80/20 rule for train/test split
 for i in range(len(img_embeddings)):
     if i % 5 == 0: 
         x_test.append(img_embeddings[i])
+        x_test_images.append(images[i])
         y_test.append(targets[i])
     else: 
         x_train.append(img_embeddings[i])
+        x_train_images.append(images[i])
         y_train.append(targets[i])
 print("printing y_train & y_test")
 print(y_train, y_test)
@@ -159,13 +167,17 @@ print("Predictions: ", decoded_predictions)
 accuracy = accuracy_score(test_labels, encoded_predictions)
 print("Accuracy: ", accuracy)
 
+# save the model 
+filename = 'svm_model.pkl'
+pickle.dump(clf, open(filename, 'wb'))
 
+# visualize predictions 
 
+for i in range(30, 50): 
+    
+    example_image = cv2.imread(PATH + x_test_images[i])
+    example_prediction = encoded_predictions[i]
+    example_identity =  decoded_predictions[i]
 
-
-
-
-
-
-
-
+    cv2.imshow(f'Identified as {example_identity}', example_image)
+    cv2.waitKey(0)
