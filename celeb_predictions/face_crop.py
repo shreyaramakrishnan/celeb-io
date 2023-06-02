@@ -83,8 +83,8 @@ def face_crop(img, scale=1.7):
   return face_cropped
 
 
-# input = "C:/Users/liann/Documents/UW/celeb-io/celeb_predictions/data/basic_input_spoof"
-# output = "C:/Users/liann/Documents/UW/celeb-io/celeb_predictions/data/img_output"
+input = "C:/Users/liann/Documents/UW/celeb-io/celeb_predictions/data/basic_input_spoof"
+output = "C:/Users/liann/Documents/UW/celeb-io/celeb_predictions/data/img_output"
 
 # try:
 #   dir_face_crop(input, output, 1.5)

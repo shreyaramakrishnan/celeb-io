@@ -18,10 +18,10 @@ FRAME_DELAY = 50
 # call preprocessing file
 
 # # load in the train model
-print("start import model")
+print("---start import model---")
 with open('./svm_model.pkl', 'rb') as f:
     clf = pickle.load(f)
-print("end import model")
+print("---end import model---")
 print(clf.classes_)
 
 # train model
@@ -57,7 +57,12 @@ while(True):
 
       cropped_face = fc.face_crop(frame)
       # predict_input = cropped_face
-      # if cropped_face != None:
+      if not cropped_face is None:
+         print("face detected")
+      else:
+         print("face not detected")
+         label = "Unknown"
+         
       try:
         predict_input = fc.normalize_image(cropped_face)
       # picture = predict_input
@@ -78,11 +83,13 @@ while(True):
 
         classes = le.inverse_transform(clf.classes_)
         print("classes ", classes)
-      except:
-         print("exception.")
-         pass
+      except Exception as e:
+        # print("exception.")
+        # print(e)
+        pass
 
       frame_count = 0
+    
 
     # Display the resulting video frame
 
@@ -92,7 +99,7 @@ while(True):
     #    pass
     cv2.imshow('frame', frame)
     # cv2.imshow('frame', picture)
-    if (frame_count %50):
+    if (frame_count %10 == 1):
       print("Prediction: " + str(label))
 
 
