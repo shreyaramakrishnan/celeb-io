@@ -5,6 +5,7 @@ import sys
 import os
 from PIL import Image
 from pathlib import Path
+import numpy as np
 
 IM_EXTENSION = ".jpg"
 OUTPUT_SIZE = 224
@@ -106,3 +107,15 @@ def face_crop(path, scale):
 # except Exception as e:
 #   print("EXCEPTION")
 #   print(e)
+
+
+def normalize_image(img):
+    # normalize pixel values to be between 0 and 1
+    img = (img / 255.).astype(np.float32)
+    # resize image to 224x224
+    img = cv2.resize(img, (224,224))
+    # preprocess image for vgg model
+    img = img.reshape((img.shape[0], img.shape[1], img.shape[2]))
+    # img = keras.applications.vgg16.preprocess_input(img)
+    # convert from BGR to RGB
+    return img[...,::-1]
