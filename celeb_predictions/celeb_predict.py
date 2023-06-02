@@ -18,11 +18,11 @@ FRAME_DELAY = 50
 # call preprocessing file
 
 # # load in the train model
-print("---start import model---")
-with open('./svm_model.pkl', 'rb') as f:
-    clf = pickle.load(f)
-print("---end import model---")
-print(clf.classes_)
+# print("---start import model---")
+# with open('./svm_model.pkl', 'rb') as f:
+#     clf = pickle.load(f)
+# print("---end import model---")
+# print(clf.classes_)
 
 # train model
 # clf = tm.train_model()
@@ -56,13 +56,17 @@ while(True):
        # do prediction
 
       cropped_face = fc.face_crop(frame)
+      # img = cv2.imread('C:/Users/liann/Documents/UW/celeb-io/sandytest.jpg') 
+      # cropped_face = fc.face_crop(img)
+
+      # TODO: try importing new celebrity face; if this doesn't work, 
       # predict_input = cropped_face
-      if not cropped_face is None:
-         print("face detected")
-      else:
+      if cropped_face is None:
          print("face not detected")
          label = "Unknown"
-         
+      else:
+         print("face detected")
+
       try:
         predict_input = fc.normalize_image(cropped_face)
       # picture = predict_input

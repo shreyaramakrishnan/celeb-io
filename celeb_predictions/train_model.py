@@ -18,6 +18,9 @@ import pickle
 
 num_classes = 196
 
+INPUT_DIR = './celeb_predictions/data/basic_input_spoof/'
+OUTPUT_DIR = './celeb_predictions/data/img_output/'
+
 '''
 convolutional - good use for detecting features in images, outputs a feature map 
 max pooling - reduces the dimensionality of each feature map but keeps the most important information (max in this case)
@@ -98,7 +101,7 @@ def get_functional_model():
     return functional_model
 
 
-def train_model():
+def train_model(input=INPUT_DIR,output=OUTPUT_DIR,save=False,show_pred=False):
   # model = vgg_face()
 
   # load in the pre-trained weights using the vgg model up to the last layer (fc2)
@@ -113,12 +116,11 @@ def train_model():
   functional_model = get_functional_model()
 
   # preprocess the data by calling face_crop.py 
-  INPUT_DIR = './celeb_predictions/data/basic_input_spoof/'
-  OUTPUT_DIR = './celeb_predictions/data/img_output/'
-  #fc.dir_face_crop(INPUT_DIR, OUTPUT_DIR)
+
+  #fc.dir_face_crop(input, output)
 
   # generate embeddings for each image in our dataset based on the pre-trained weights 
-  PATH = OUTPUT_DIR
+  PATH = output
   images = os.listdir(PATH)
   # print(images)
 
@@ -182,6 +184,24 @@ def train_model():
   accuracy = accuracy_score(test_labels, encoded_predictions)
   print("Accuracy: ", accuracy)
 
+  if save:
+    # save the model 
+    filename = 'svm_model.pkl'
+    pickle.dump(clf, open(filename, 'wb'))
+
+
+  if show_pred:
+    # visualize predictions 
+
+    for i in range(30, 50): 
+        
+        example_image = cv2.imread(PATH + x_test_images[i])
+        example_prediction = encoded_predictions[i]
+        example_identity =  decoded_predictions[i]
+
+        cv2.imshow(f'Identified as {example_identity}', example_image)
+        cv2.waitKey(0)
+
   return clf
 
   # save the model 
@@ -198,3 +218,5 @@ def train_model():
 
   #     cv2.imshow(f'Identified as {example_identity}', example_image)
   #     cv2.waitKey(0)
+
+train_model()
