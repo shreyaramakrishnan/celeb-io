@@ -2,7 +2,18 @@
 > Created By: Audrey Craig, Lianne Kniest and Shreya Ramakrishnan
 
 
-CELEB-IO is a machine learning model developed using Keras and SVM (Support Vector Machines). It is designed to classify images of celebrities and predict the identity of each celebrity in a given dataset. In addition to the core model, the project includes a webcam extension that provides real-time celebrity lookalike identification. The summary below highlights the key aspects of the project:
+CELEB-IO is a machine learning model developed using Keras and SVM (Support Vector Machines). It is designed to classify images of celebrities and predict the identity of each celebrity in a given dataset. In addition to the core model, the project includes a webcam extension that provides real-time celebrity lookalike identification. The summary below highlights the key aspects of the project. 
+
+## Summary 
+
+### Problem Setup 
+
+### Data Collection and Preprocessing 
+
+### Pre-existing Components 
+
+### Original Implementation 
+
 
 
 Project Video Summary Link:
