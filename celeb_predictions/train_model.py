@@ -101,7 +101,7 @@ functional_model.save('functional_model')
 
 # preprocess the data by calling face_crop.py 
 INPUT_DIR = './celeb_predictions/data/basic_input_spoof/'
-OUTPUT_DIR = './celeb_predictions/data/basic_output_spoof/'
+OUTPUT_DIR = './celeb_predictions/data/img_output/'
 #fc.dir_face_crop(INPUT_DIR, OUTPUT_DIR)
 
 # generate embeddings for each image in our dataset based on the pre-trained weights 
@@ -146,6 +146,7 @@ train_labels = le.fit_transform(y_train)
 test_labels = le.transform(y_test)
 print("printing training & testing ")
 print(train_labels, test_labels)
+np.save('classes.npy', le.classes_)
 
 # standardize the feature encodings 
 scaler = sk.StandardScaler()
