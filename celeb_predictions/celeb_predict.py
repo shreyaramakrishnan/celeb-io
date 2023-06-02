@@ -3,17 +3,30 @@
 
 import cv2
 import face_crop as fc
+import pickle
+import numpy as np
+from tensorflow import keras
+from keras.models import Sequential
+from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Dropout
+import sklearn.preprocessing as sk
+from sklearn.decomposition import PCA
+import train_model as tm
 
 FRAME_DELAY = 50
-
-# method to save prediction
-def save_pred(*args):
-    pass
 
 
 # call preprocessing file
 
+# # load in the train model
+print("start import model")
+with open('./svm_model.pkl', 'rb') as f:
+    clf = pickle.load(f)
+print("end import model")
+print(clf.classes_)
+
 # train model
+# clf = tm.train_model()
+
 
 # get webcam spooled
 # define a video capture object
@@ -22,12 +35,18 @@ vid = cv2.VideoCapture(0)
 label = "Unknown"
 picture = None
 frame_count = 0
+# face_model = keras.models.load_model("./functional_model")
+face_model =  tm.get_functional_model()
+# cropped_face = None
+le = sk.LabelEncoder()
+le.classes_ = np.load('classes.npy')
+
 while(True):
     # Capture the video frame by frame
     ret, frame = vid.read()
     frame_count += 1
 
-    # grab face from photo
+    # grab face from photo (draws line only, does not crop)
     coords = fc.frame_face_crop(frame)
     for (x, y, w, h) in coords:
           cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
@@ -35,15 +54,46 @@ while(True):
     # check to see if we need to update our prediction
     if (frame_count > FRAME_DELAY):
        # do prediction
-      predict_input = frame
-      print("update")
-      # picture = get_picture(prediction) # get closest neighbor photo
-      # label = fc.get_label(prediction) # get label
-       # reset frame count
+
+      cropped_face = fc.face_crop(frame)
+      # predict_input = cropped_face
+      # if cropped_face != None:
+      try:
+        predict_input = fc.normalize_image(cropped_face)
+      # picture = predict_input
+
+      
+        embedding = face_model.predict(np.expand_dims(predict_input, axis=0))
+        print("EMBEDDING:",str(embedding))
+
+        # clf = clf.fit(my_test, clf.classes_)
+
+        # le = sk.LabelEncoder()
+        
+        pred = clf.predict(embedding)
+        print("PREDICTION:", pred)
+
+        label = le.inverse_transform(pred)
+        print("LABEL: ", label)
+
+        classes = le.inverse_transform(clf.classes_)
+        print("classes ", classes)
+      except:
+         print("exception.")
+         pass
+
       frame_count = 0
 
     # Display the resulting video frame
+
+    # try:
+    #    cv2.imshow('frame', cropped_face)
+    # except:
+    #    pass
     cv2.imshow('frame', frame)
+    # cv2.imshow('frame', picture)
+    if (frame_count %50):
+      print("Prediction: " + str(label))
 
 
     # display prediction

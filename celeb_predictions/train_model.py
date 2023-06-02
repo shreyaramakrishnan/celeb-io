@@ -88,98 +88,113 @@ def load_img(path):
     # convert from BGR to RGB
     return img[...,::-1]
 
-model = vgg_face()
+def get_functional_model():
+    model = vgg_face()
+    # load in the pre-trained weights using the vgg model up to the last layer (fc2)
+    model.load_weights('vgg16_weights.h5' , by_name = True, skip_mismatch = True) 
+      # this is a functional, rather than sequential network - they are more flexible 
+    # look at "descriptor.png" to see the model architecture
+    functional_model = keras.models.Model(inputs=model.layers[0].input, outputs=model.layers[-2].output)
+    return functional_model
 
-# load in the pre-trained weights using the vgg model up to the last layer (fc2)
-model.load_weights('vgg16_weights.h5' , by_name = True, skip_mismatch = True) 
 
-# this is a functional, rather than sequential network - they are more flexible 
-# look at "descriptor.png" to see the model architecture
-functional_model = keras.models.Model(inputs=model.layers[0].input, outputs=model.layers[-2].output)
+def train_model():
+  # model = vgg_face()
 
-functional_model.save('functional_model')
+  # load in the pre-trained weights using the vgg model up to the last layer (fc2)
+  # model.load_weights('vgg16_weights.h5' , by_name = True, skip_mismatch = True) 
 
-# preprocess the data by calling face_crop.py 
-INPUT_DIR = './celeb_predictions/data/basic_input_spoof/'
-OUTPUT_DIR = './celeb_predictions/data/img_output/'
-#fc.dir_face_crop(INPUT_DIR, OUTPUT_DIR)
+  # # this is a functional, rather than sequential network - they are more flexible 
+  # # look at "descriptor.png" to see the model architecture
+  # functional_model = keras.models.Model(inputs=model.layers[0].input, outputs=model.layers[-2].output)
 
-# generate embeddings for each image in our dataset based on the pre-trained weights 
-PATH = OUTPUT_DIR
-images = os.listdir(PATH)
-# print(images)
+  # functional_model.save('functional_model')
 
-img_embeddings = []
-targets = []
-for image in images:
-    img = load_img(PATH + image)
-    targets.append(fc.get_label(PATH + image))
-    embedding = functional_model.predict(np.expand_dims(img, axis=0))[0]
-    img_embeddings.append(embedding)
+  functional_model = get_functional_model()
 
-# plot the embeddings
+  # preprocess the data by calling face_crop.py 
+  INPUT_DIR = './celeb_predictions/data/basic_input_spoof/'
+  OUTPUT_DIR = './celeb_predictions/data/img_output/'
+  #fc.dir_face_crop(INPUT_DIR, OUTPUT_DIR)
 
-# create train and test datasets using the embeddings we generated 
-x_train = []
-y_train = []
-x_test = []
-y_test = []
-x_test_images = []
-x_train_images = []
+  # generate embeddings for each image in our dataset based on the pre-trained weights 
+  PATH = OUTPUT_DIR
+  images = os.listdir(PATH)
+  # print(images)
 
-# following the 80/20 rule for train/test split
-for i in range(len(img_embeddings)):
-    if i % 5 == 0: 
-        x_test.append(img_embeddings[i])
-        x_test_images.append(images[i])
-        y_test.append(targets[i])
-    else: 
-        x_train.append(img_embeddings[i])
-        x_train_images.append(images[i])
-        y_train.append(targets[i])
-print("printing y_train & y_test")
-print(y_train, y_test)
+  img_embeddings = []
+  targets = []
+  for image in images:
+      img = load_img(PATH + image)
+      targets.append(fc.get_label(PATH + image))
+      embedding = functional_model.predict(np.expand_dims(img, axis=0))[0]
+      img_embeddings.append(embedding)
 
-# encode the labels using label encoder 
-le = sk.LabelEncoder()
-train_labels = le.fit_transform(y_train)
-test_labels = le.transform(y_test)
-print("printing training & testing ")
-print(train_labels, test_labels)
-np.save('classes.npy', le.classes_)
+  # plot the embeddings
 
-# standardize the feature encodings 
-scaler = sk.StandardScaler()
-x_train_std = scaler.fit_transform(x_train)
-x_test_std = scaler.transform(x_test)
+  # create train and test datasets using the embeddings we generated 
+  x_train = []
+  y_train = []
+  x_test = []
+  y_test = []
+  x_test_images = []
+  x_train_images = []
 
-# reduce the dimensionality of the feature encodings using PCA
-pca = PCA(n_components=128)
-x_train_pca = pca.fit_transform(x_train_std)
-x_test_pca = pca.transform(x_test_std)
+  # following the 80/20 rule for train/test split
+  for i in range(len(img_embeddings)):
+      if i % 5 == 0: 
+          x_test.append(img_embeddings[i])
+          x_test_images.append(images[i])
+          y_test.append(targets[i])
+      else: 
+          x_train.append(img_embeddings[i])
+          x_train_images.append(images[i])
+          y_train.append(targets[i])
+  print("printing y_train & y_test")
+  print(y_train, y_test)
 
-# create and train an SVM classifier 
-clf = svm.SVC(kernel='rbf', C=10, gamma=0.001)
-clf.fit(x_train_pca, train_labels)
+  # encode the labels using label encoder 
+  le = sk.LabelEncoder()
+  train_labels = le.fit_transform(y_train)
+  test_labels = le.transform(y_test)
+  print("printing training & testing ")
+  print(train_labels, test_labels)
+  np.save('classes.npy', le.classes_)
 
-encoded_predictions = clf.predict(x_test_pca)
-decoded_predictions = le.inverse_transform(encoded_predictions)
-print("Predictions: ", decoded_predictions)
+  # standardize the feature encodings 
+  scaler = sk.StandardScaler()
+  x_train_std = scaler.fit_transform(x_train)
+  x_test_std = scaler.transform(x_test)
 
-accuracy = accuracy_score(test_labels, encoded_predictions)
-print("Accuracy: ", accuracy)
+  # reduce the dimensionality of the feature encodings using PCA
+  pca = PCA(n_components=128)
+  x_train_pca = pca.fit_transform(x_train_std)
+  x_test_pca = pca.transform(x_test_std)
 
-# save the model 
-filename = 'svm_model.pkl'
-pickle.dump(clf, open(filename, 'wb'))
+  # create and train an SVM classifier 
+  clf = svm.SVC(kernel='rbf', C=10, gamma=0.001)
+  clf.fit(x_train_pca, train_labels)
 
-# visualize predictions 
+  encoded_predictions = clf.predict(x_test_pca)
+  decoded_predictions = le.inverse_transform(encoded_predictions)
+  print("Predictions: ", decoded_predictions)
 
-for i in range(30, 50): 
-    
-    example_image = cv2.imread(PATH + x_test_images[i])
-    example_prediction = encoded_predictions[i]
-    example_identity =  decoded_predictions[i]
+  accuracy = accuracy_score(test_labels, encoded_predictions)
+  print("Accuracy: ", accuracy)
 
-    cv2.imshow(f'Identified as {example_identity}', example_image)
-    cv2.waitKey(0)
+  return clf
+
+  # save the model 
+  # filename = 'svm_model.pkl'
+  # pickle.dump(clf, open(filename, 'wb'))
+
+  # visualize predictions 
+
+  # for i in range(30, 50): 
+      
+  #     example_image = cv2.imread(PATH + x_test_images[i])
+  #     example_prediction = encoded_predictions[i]
+  #     example_identity =  decoded_predictions[i]
+
+  #     cv2.imshow(f'Identified as {example_identity}', example_image)
+  #     cv2.waitKey(0)
