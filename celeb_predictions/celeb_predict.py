@@ -15,16 +15,16 @@ import train_model as tm
 FRAME_DELAY = 50
 
 
-# call preprocessing file
-
 # # load in the train model
-# print("---start import model---")
-# with open('./svm_model.pkl', 'rb') as f:
-#     clf = pickle.load(f)
-# print("---end import model---")
-# print(clf.classes_)
+print("---start import model---")
+with open('./svm_model.pkl', 'rb') as f:
+    clf = pickle.load(f)
+print("---end import model---")
+print(clf.classes_)
 
-# train model
+
+# FOR TESTING: DOES HAND-GENERATING THE MODEL LEAD TO SAME ISSUE AS LOADING IN ONE?
+# answer: yes -_-
 # clf = tm.train_model()
 
 
@@ -35,7 +35,6 @@ vid = cv2.VideoCapture(0)
 label = "Unknown"
 picture = None
 frame_count = 0
-# face_model = keras.models.load_model("./functional_model")
 face_model =  tm.get_functional_model()
 # cropped_face = None
 le = sk.LabelEncoder()
@@ -56,10 +55,12 @@ while(True):
        # do prediction
 
       cropped_face = fc.face_crop(frame)
+
+      # FOR TESTING: does brinigng in adam sandler's face instead of webcam lead to diff pred?
+      # answer: no.
       # img = cv2.imread('C:/Users/liann/Documents/UW/celeb-io/sandytest.jpg') 
       # cropped_face = fc.face_crop(img)
 
-      # TODO: try importing new celebrity face; if this doesn't work, 
       # predict_input = cropped_face
       if cropped_face is None:
          print("face not detected")
@@ -68,16 +69,13 @@ while(True):
          print("face detected")
 
       try:
+        # should error out if cropped face is None leading to no change of prediction
         predict_input = fc.normalize_image(cropped_face)
       # picture = predict_input
 
       
         embedding = face_model.predict(np.expand_dims(predict_input, axis=0))
         print("EMBEDDING:",str(embedding))
-
-        # clf = clf.fit(my_test, clf.classes_)
-
-        # le = sk.LabelEncoder()
         
         pred = clf.predict(embedding)
         print("PREDICTION:", pred)
@@ -97,6 +95,10 @@ while(True):
 
     # Display the resulting video frame
 
+
+    # FOR TESTING: is the face we pass from the webcam to the embedding generator correct?
+    #answer: yes.
+    
     # try:
     #    cv2.imshow('frame', cropped_face)
     # except:

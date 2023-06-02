@@ -102,21 +102,10 @@ def get_functional_model():
 
 
 def train_model(input=INPUT_DIR,output=OUTPUT_DIR,save=False,show_pred=False):
-  # model = vgg_face()
-
-  # load in the pre-trained weights using the vgg model up to the last layer (fc2)
-  # model.load_weights('vgg16_weights.h5' , by_name = True, skip_mismatch = True) 
-
-  # # this is a functional, rather than sequential network - they are more flexible 
-  # # look at "descriptor.png" to see the model architecture
-  # functional_model = keras.models.Model(inputs=model.layers[0].input, outputs=model.layers[-2].output)
-
-  # functional_model.save('functional_model')
-
+  # model for getting faces for use in generating embeddings
   functional_model = get_functional_model()
 
-  # preprocess the data by calling face_crop.py 
-
+  # preprocess the data by calling face_crop.py (this wil get us an inpupt directory of cropped faces)
   #fc.dir_face_crop(input, output)
 
   # generate embeddings for each image in our dataset based on the pre-trained weights 
@@ -204,19 +193,6 @@ def train_model(input=INPUT_DIR,output=OUTPUT_DIR,save=False,show_pred=False):
 
   return clf
 
-  # save the model 
-  # filename = 'svm_model.pkl'
-  # pickle.dump(clf, open(filename, 'wb'))
 
-  # visualize predictions 
-
-  # for i in range(30, 50): 
-      
-  #     example_image = cv2.imread(PATH + x_test_images[i])
-  #     example_prediction = encoded_predictions[i]
-  #     example_identity =  decoded_predictions[i]
-
-  #     cv2.imshow(f'Identified as {example_identity}', example_image)
-  #     cv2.waitKey(0)
-
-train_model()
+# "main method" run
+# train_model(show_pred=True)
