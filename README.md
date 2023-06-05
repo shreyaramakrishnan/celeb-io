@@ -34,5 +34,28 @@ We drew inspiration for building and training our model from the Kaggle project 
 
 For preprocessing, we drew inspiration from the Medium article linked, where they describe OpenCV's face cascades, which we also used to extract the faces from our original dataset. 
 
-## Installation and Use 
+### Results  
+After writing our project, we trained the model on a much larger dataset than we used for preliminary training while creating the model. This training ran for around 20 hours. 
+
+**FILL IN THE REST OF THIS SECTION LATER, AFTER TRAINING IS COMPLETE**
+
+## Discussion 
+### Problems Encountered 
+In our initial preprocessing, when an image had more than 1 face, it would save both of those faces as separate images labelled as the celebrity folder the original image was classified under. In order to determine which of those two faces was actually that celebrity, we would have had to manually clean the data. Therefore, we decided that it would be best to discard any images with more than 1 face so that we didn't have incorrectly labelled images in the dataset. For example, if an image of Tom Holland and Zendaya was under the folder labelled "Zendaya", the original implementation would have cropped out both faces and saved the face of Tom Holland as "Zendaya_1.png" and the face of Zendaya as "Zendaya_2.png" (or vice versa). To avoid having an image of Tom Holland labelled as Zendaya (which would throw off the model), the second implementation would discard that image all together. 
+
+Another problem that we encountered was using the model that we had trained on the image frame captured by the webcam. Since we didn't want to retrain the model and wanted to avoid redundancy in our code, we used the "pickle" module provided by Python to store the model that we built in train_model.py and load it into celeb_predict.py. 
+
+From here, we faced issues in transforming the image captured by the webcam into the input format of the model. We used the prior model to generate the embedding but struggled to replicate the normalization and PCA transformations due to the format of this data compared to our training data. This led to inaccuracy in the classification outputted by the SVM at the end. We're currently working on improving the accuracy by adapting those transformations (expanded in next steps).
+
+### Next Steps 
+- Improving accuracy by appropriately transforming the embeddings.
+- Implementing a popup window that displays an image of the celebrity that the model has classified as most similar to you. 
+  - Eg) If the webcam extension classified you as "Brittany Spears", a window labelled "Brittany Spears" containing an image of her would 
+    pop up   
+- display percent match between two images 
+- list the closest celebrities (top 3 matches) 
+- optimize the runtimes of the preprocessing algorithms
+### Differences in Approach 
+training and testing of the model followed a standard approach, differed with the video capture + webcam 
+
   
