@@ -50,12 +50,13 @@ From here, we faced issues in transforming the image captured by the webcam into
 ### Next Steps 
 - Improving accuracy by appropriately transforming the embeddings.
 - Implementing a popup window that displays an image of the celebrity that the model has classified as most similar to you. 
-  - Eg) If the webcam extension classified you as "Brittany Spears", a window labelled "Brittany Spears" containing an image of her would 
+  - If the webcam extension classified you as "Brittany Spears", a window labelled "Brittany Spears" containing an image of her would 
     pop up   
-- display percent match between two images 
-- list the closest celebrities (top 3 matches) 
-- optimize the runtimes of the preprocessing algorithms
+- Display percent match between the frame captured by the webcam and the celebrity that it was classified as.
+- Listing the top 3 matches for celebrity classifications rather than just 1.
+- Creating a GUI that allows the user to save and share the prediction outputted by the model.
+
 ### Differences in Approach 
-training and testing of the model followed a standard approach, differed with the video capture + webcam 
+Although the training and testing of our model followed a standard approach, we chose to implement the webcam extension to make our project different from others. By choosing to include real time detection, we had to use techniques to save our model to be run on the frames captured by the webcam. This also makes our project more user friendly, as the user does not have to download any datasets or retrain the model. 
 
   
