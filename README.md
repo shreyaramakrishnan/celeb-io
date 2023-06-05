@@ -20,6 +20,7 @@ When approaching the project, we knew that the breakdown of the project would lo
 
 ### Data Collection and Preprocessing 
 > DATASET LINK: https://drive.google.com/drive/folders/0B5G8pYUQMNZnLTBVaENWUWdzR0E?resourcekey=0-gRGzioHdCR4zkegs6t1W2Q&usp=sharing
+> 
 > Given by https://github.com/prateekmehta59/Celebrity-Face-Recognition-Dataset
 
 We selected this dataset because of its vast array of celebrities including those of different races, gender, and age. The robust dataset had also been used for a similar project and was therefore organized into celebrity-named folders, eliminating extra preprocessing steps. In terms of preprocessing the data, we wrote a script (contained in face_crop.py) which iterated through the images and extracted the face. We also implemented checks that threw out data that had more than one face in the image. This was because each image was tagged with one celebrity name, and an image that contained two faces may confuse the model. We also discarded any images that did not have any identifiable faces. Once this processing was complete, the processed images were saved into a new folder which would be used for the model. Images in this folder followed the naming convention "Celebrity Name_Number.png", where number represents 1 for the first image of that celebrity, 2 for the second, and so on. 
