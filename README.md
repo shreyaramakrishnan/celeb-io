@@ -8,7 +8,7 @@ CELEB-IO is a machine learning model developed using Keras and SVM (Support Vect
 
 ### Problem Setup 
 
-The goal of CELEB-IO is to train a model to accurately predict the identity of celebrities depicted in images. It involves multi-class classification, where each celebrity corresponds to a separate class label. We wanted to build an accurate facial recognition model and knowing that images of celebrities are very wide-spread across the internet, we knew that would be a robust dataset to train a facial recognition model on. Additionally, wanting to add a real time component to our project we chose to implement the webcam extension. 
+The goal of CELEB-IO is to train a model to accurately predict the identity of celebrities depicted in images. It involves multi-class classification, where each celebrity corresponds to a separate class label. We wanted to build an accurate facial recognition model and knowing that images of celebrities are very wide-spread across the internet, this would require a robust dataset to train a facial recognition model on. Additionally, wanting to add a real time component to our project we chose to implement the webcam extension. 
 
 When approaching the project, we knew that the breakdown of the project would look similar to the following.
 1. Build a model using pre-trained weights. We decided to use a CNN (Convolutional Neural Network) as they are the most accurate at image classification. We drew inspiration from the VGG face model and looked through the documentation to see the different network layers they used to replicate a similar structure. 
