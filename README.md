@@ -26,39 +26,13 @@ When approaching the project, we knew that the breakdown of the project would lo
 We selected this dataset because of its vast array of celebrities including those of different races, gender, and age. The robust dataset had also been used for a similar project and was therefore organized into celebrity-named folders, eliminating extra preprocessing steps. In terms of preprocessing the data, we wrote a script (contained in face_crop.py) which iterated through the images and extracted the face. We also implemented checks that threw out data that had more than one face in the image. This was because each image was tagged with one celebrity name, and an image that contained two faces may confuse the model. We also discarded any images that did not have any identifiable faces. Once this processing was complete, the processed images were saved into a new folder which would be used for the model. Images in this folder followed the naming convention "Celebrity Name_Number.png", where number represents 1 for the first image of that celebrity, 2 for the second, and so on. 
 
 ### Pre-existing Components 
+> Kaggle Project: https://www.kaggle.com/code/vinayakshanawad/celebrity-face-recognition-vggface-model
+>
+> Medium Article: https://bencho264.medium.com/face-recognition-with-celebrities-8e2767315fd1
 
-### Original Implementation 
+We drew inspiration for building and training our model from the Kaggle project linked above. However, since our dataset was a different size and labelled differently from the one used in that project, we had to modify the layers of the model to fit our data. Additionally, we had to write code to extract the labels differently. 
 
+For preprocessing, we drew inspiration from the Medium article linked, where they describe OpenCV's face cascades, which we also used to extract the faces from our original dataset. 
 
-
-Project Video Summary Link:
-
-1-2 paragraphs about project:
-
-
-
-      What problem are you trying to solve?
-
-      What algorithms/techniques will you use?
-
-      What dataset(s)?
-
-      Any other useful information
-      
-      
-      
- This video summary should mention...
- 
- setup:
- 
- data set used: https://drive.google.com/drive/folders/0B5G8pYUQMNZnLTBVaENWUWdzR0E?resourcekey=0-gRGzioHdCR4zkegs6t1W2Q&usp=sharing
- given by https://github.com/prateekmehta59/Celebrity-Face-Recognition-Dataset
- 
- techniques:
- 
- components from preexisting work: VGG Face model inspired by https://www.kaggle.com/general/255813
- 
- components implemented for the project: 
- 
- 
+## Installation and Use 
   
