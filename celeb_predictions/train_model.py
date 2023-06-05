@@ -1,4 +1,15 @@
-# import keras 
+#----------------------------------------------------------------------------
+# Created By  : Audrey Craig, Lianne Kniest, Shreya Ramakrishnan 
+# Created Date: June 2023
+# ---------------------------------------------------------------------------
+""" 
+    train_model is file that generates an SVM model for use in face-matching.
+    It is imported as a library but can also be used in script format, bottom
+    of the file for details and modify input_dir and output_dir below.
+    Script usage: python ./celec_predictions/train_model.py
+""" 
+# ---------------------------------------------------------------------------
+
 from tensorflow import keras
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Dropout
@@ -12,9 +23,6 @@ from sklearn.metrics import accuracy_score
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import pickle
-
-# TODO: figure out how to get the embeddings so that this can be used as a pretrained model
-# TODO: test on celebrity images 
 
 num_classes = 196
 
@@ -101,12 +109,13 @@ def get_functional_model():
     return functional_model
 
 
-def train_model(input=INPUT_DIR,output=OUTPUT_DIR,save=False,show_pred=False):
+def train_model(input=INPUT_DIR,output=OUTPUT_DIR,save=False,show_pred=False,gen_imgs=False):
   # model for getting faces for use in generating embeddings
   functional_model = get_functional_model()
 
   # preprocess the data by calling face_crop.py (this wil get us an inpupt directory of cropped faces)
-  #fc.dir_face_crop(input, output)
+  if(gen_imgs):
+    fc.dir_face_crop(input, output)
 
   # generate embeddings for each image in our dataset based on the pre-trained weights 
   PATH = output
@@ -194,5 +203,5 @@ def train_model(input=INPUT_DIR,output=OUTPUT_DIR,save=False,show_pred=False):
   return clf
 
 
-# "main method" run
-# train_model(show_pred=True)
+# "main method" run (uncomment and run as a script)
+# train_model(input=INPUT_DIR,output=OUTPUT_DIR,save=True,show_pred=True,gen_imgs=True)
