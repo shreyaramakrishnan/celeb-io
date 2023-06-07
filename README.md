@@ -4,6 +4,9 @@
 
 CELEB-IO is a machine learning model developed using Keras and SVM (Support Vector Machines). It is designed to classify images of celebrities and trained by predicting the identity of each celebrity in a given dataset. In addition to the core model, the project includes a webcam extension that provides real-time celebrity lookalike identification, AKA "what celebrity do I most look like?". The summary below highlights the key aspects of the project. 
 
+## Project Demo 
+>[SEE DEMO HERE](https://www.loom.com/share/4428821655ac4c588ce6f67378a11022)
+
 ## Summary 
 
 ### Problem Setup 
@@ -69,5 +72,3 @@ From here, we faced issues in transforming the image captured by the webcam into
 ### Differences in Approach 
 Although the training and testing of our model followed a standard approach, we chose to implement the webcam extension to make our project different from others. By choosing to include real time detection, we had to use techniques to save our model to be run on the frames captured by the webcam. This also makes our project more user friendly, as the user does not have to download any datasets or retrain the model. 
 
-## Project Demo 
->[SEE DEMO HERE](https://www.loom.com/share/4428821655ac4c588ce6f67378a11022)
