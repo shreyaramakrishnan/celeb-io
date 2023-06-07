@@ -49,8 +49,6 @@ We designed our code to be portable with many options for use (library or script
 ### Results  
 After writing our project, we trained the model on a much larger dataset than we used for preliminary training while creating the model. This training ran for over 50 hours (on a very sad PC with 16 GB of RAM). Since we didn't want to have end-users have to download the dataset and retrain the model, we used the "pickle" module provided by Python to store the model that we built in train_model.py and load it into celeb_predict.py. 
 
-**FILL IN THE REST OF THIS SECTION LATER, AFTER TRAINING IS COMPLETE**
-
 ## Discussion 
 ### Problems Encountered 
 In our initial preprocessing, when an image had more than 1 face, it would save both of those faces as separate images labelled as the celebrity folder the original image was classified under. In order to determine which of those two faces were actually that celebrity, we would have had to manually clean the data or build a pipeline that trained as images were converted; this accuracy would have been low at best. Therefore, we decided that it would be best to discard any images with more than 1 face so that we didn't have incorrectly labelled images in the dataset. For example, if an image of Tom Holland and Zendaya was under the folder labelled "Zendaya", the original implementation would have cropped out both faces and saved the face of Tom Holland as ```Zendaya_1.png``` and the face of Zendaya as ```Zendaya_2.png``` (or vice versa). To avoid having an image of Tom Holland labelled as Zendaya (which would throw off the model), the second implementation would discard that image all together. 
@@ -58,6 +56,8 @@ In our initial preprocessing, when an image had more than 1 face, it would save 
 Another problem that we encountered was using the model that we had trained on the image frame captured by the webcam.
 
 From here, we faced issues in transforming the image captured by the webcam into the input format of the model. We used the prior model to generate the embedding but struggled to replicate the normalization and PCA transformations due to the format of this data compared to our training data. This led to inaccuracy in the classification outputted by the SVM at the end. We're currently working on improving the accuracy by adapting those transformations (expanded in next steps).
+
+Our final step was to train our model on the large dataset that we downloaded and pre-preocessed. Our model got about 50 hours into training before one of our group members' PCs decided to shut down, leaving us with only the "4-celeb" model that is saved as a pickl file. Going forward, stepts to fix this would be to add a "save incrementally" feature while training or to outsource the computing to a remote cluster.
 
 ### Next Steps 
 - Improving accuracy by appropriately transforming the embeddings. (PCA transformations currently don't properly apply outside of the train_model file)
